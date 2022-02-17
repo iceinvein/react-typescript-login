@@ -6,11 +6,9 @@
       "dom.iterable",
       "esnext"
     ],
-    "paths": {
-      "@mui/styled-engine": [
-        "./node_modules/@mui/styled-engine-sc"
-      ]
-    },
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
     "importHelpers": true,
     "allowJs": true,
     "skipLibCheck": true,
@@ -27,6 +25,10 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "src/**/*.tsx",
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.tsx"
   ]
 }
