@@ -1,39 +1,39 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SignIn from './SignIn';
 
+const submit = jest.fn();
+
+const setup = (): void => {
+  render(<SignIn submit={submit} />);
+};
+
 test('should render email, password and sign in button', () => {
-  render(<SignIn />);
+  setup();
 
   const header = screen.getAllByText(/sign in/i)[0];
-  const emailLabel = screen.getByLabelText(/Email Address/i);
-  const emailInput = screen.getByTestId('email');
-  const passwordLabel = screen.getByLabelText(/Password/i);
-  const passwordInput = screen.getByTestId('password');
-  const signInButton = screen.getByTestId('sign-in');
+  const email = screen.getByLabelText(/Email Address/i);
+  const password = screen.getByLabelText(/Password/i);
+  const signInButton = screen.getAllByText(/sign in/i)[1];
 
   expect(header).toBeInTheDocument();
-  expect(emailLabel).toBeInTheDocument();
-  expect(emailInput).toBeInTheDocument();
-  expect(passwordLabel).toBeInTheDocument();
-  expect(passwordInput).toBeInTheDocument();
+  expect(email).toBeInTheDocument();
+  expect(password).toBeInTheDocument();
   expect(signInButton).toBeInTheDocument();
-  expect(signInButton).toHaveTextContent(/Sign In/i);
 });
 
 test('should render remember me checkbox', () => {
-  render(<SignIn />);
+  setup();
 
-  const rememberMeLabel = screen.getByLabelText(/Remember me/i);
-  const rememberMeInput = screen.getByTestId('remember-me');
+  const rememberMe = screen.getByLabelText(/Remember me/i);
 
-  expect(rememberMeLabel).toBeInTheDocument();
-  expect(rememberMeInput).toBeInTheDocument();
-  expect(rememberMeInput).not.toBeChecked();
+  expect(rememberMe).toBeInTheDocument();
+  expect(rememberMe).not.toBeChecked();
 });
 
 test('should render forgot password link', () => {
-  render(<SignIn />);
+  setup();
 
   const forgotPasswordLink = screen.getByText(/forgot password/i);
 
@@ -41,9 +41,27 @@ test('should render forgot password link', () => {
 });
 
 test('should render sign up link', () => {
-  render(<SignIn />);
+  setup();
 
   const signUpLink = screen.getByText(/sign up/i);
 
   expect(signUpLink).toBeInTheDocument();
+});
+
+test('should send the username and password entered on submit', () => {
+  const submitLogin = jest.fn();
+  render(<SignIn submit={submitLogin} />);
+
+  const emailInput = screen.getByLabelText(/Email Address/i);
+  const passwordInput = screen.getByLabelText(/Password/i);
+  const rememberMeInput = screen.getByLabelText(/Remember me/i);
+  const signInButton = screen.getAllByText(/Sign In/i)[1];
+
+  userEvent.type(emailInput, 'test');
+  userEvent.type(passwordInput, 'test');
+  userEvent.click(rememberMeInput);
+  userEvent.click(signInButton);
+
+  expect(submitLogin).toHaveBeenCalledTimes(1);
+  expect(submitLogin).toHaveBeenCalledWith('test', 'test', true);
 });

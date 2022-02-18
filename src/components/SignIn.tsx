@@ -14,7 +14,33 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-function SignIn(): JSX.Element {
+type Props = {
+  submit: (email: string, password: string, rememberMe: boolean) => void;
+};
+
+function SignIn({ submit }: Props): JSX.Element {
+  const [values, setValues] = React.useState({
+    email: '',
+    password: '',
+    rememberMe: false,
+  });
+  const [rememberMe, setRememberMe] = React.useState(false);
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    submit(values.email, values.password, rememberMe);
+  };
+
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
+
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setRememberMe(event.target.checked);
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -37,32 +63,33 @@ function SignIn(): JSX.Element {
         <Typography component="h1" variant="h5">
           Sign In
         </Typography>
-        <Box component="form">
+        <Box component="form" onSubmit={handleSubmit}>
           <TextField
             margin="normal"
             required
             fullWidth
             name="email"
-            data-testid="email"
             label="Email Address"
             autoComplete="email"
+            onChange={handleOnChange}
           />
           <TextField
             margin="normal"
             required
             fullWidth
             name="password"
-            data-testid="password"
             label="Password"
             type="password"
             autoComplete="current-password"
+            onChange={handleOnChange}
           />
           <FormControlLabel
             control={
               <Checkbox
                 value="remember"
                 color="primary"
-                data-testid="remember-me"
+                name="rememberMe"
+                onChange={handleCheckboxChange}
               />
             }
             label="Remember Me"

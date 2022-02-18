@@ -16,7 +16,11 @@ function App(): JSX.Element {
       <Stack direction="row" justifyContent="flex-end">
         <ThemeSwitch />
       </Stack>
-      <SignIn />
+      <SignIn
+        submit={(email, password, rememberMe) =>
+          alert(JSON.stringify({ email, password, rememberMe }))
+        }
+      />
     </ThemeProvider>
   );
 }
