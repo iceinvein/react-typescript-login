@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Switch from '@mui/material/Switch';
-import { FormControlLabel } from '@mui/material';
+import { ColorModeContext } from '../App';
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -51,11 +51,14 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 }));
 
 function ThemeSwitch(): JSX.Element {
+  const colorMode = React.useContext(ColorModeContext);
+
   return (
-    <FormControlLabel
-      control={<MaterialUISwitch sx={{ m: 1 }} />}
-      label=""
+    <MaterialUISwitch
+      sx={{ m: 1 }}
       data-testid="theme-toggle"
+      onClick={colorMode.toggleColorMode}
+      inputProps={{ role: 'switch' }}
     />
   );
 }
